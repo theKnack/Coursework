@@ -4,20 +4,15 @@
 #include <stdbool.h>
 #include <math.h>
 
-int MaxPos(int A[], int size) {
-    int mi= 0;
-    for (int i=0; i<size; i++){
-        if(A[i]>A[mi]){
-            mi=i;
-        }
-    }
-    return mi;
-}
 void sort(int A[],int  size){
     int mi,temp;
     for(int i=size;i>1;i--) 
     {
-        mi=MaxPos(A,i);
+        for (int j=0; j<size; j++){
+            if(A[j]>A[mi]){
+                mi=j;
+            }
+        }
         temp=A[mi];
         A[mi]=A[i-1];
         A[i-1]=temp;
@@ -93,7 +88,6 @@ void main() {
     }
     else {
         int newsize; 
-
         MPI_Recv(&newsize, 1, MPI_INT, 0, 2, MPI_COMM_WORLD, &status);
         int localArray[newsize]; 
         for(int li = 0; li < newsize; li++) {
@@ -101,8 +95,7 @@ void main() {
             localArray[li] =  rec;
         }
         sort(localArray,newsize);
-
-        MPI_Send(localArray, newsize, MPI_INT, 0, 5, MPI_COMM_WORLD);
+        MPI_Send(localArray,newsize,MPI_INT,0,5,MPI_COMM_WORLD);
     }
 
     MPI_Finalize();
